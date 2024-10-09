@@ -1,0 +1,667 @@
+* { /*Realizamos un par de asignaciones previas generales que se aplicaremos durante todo el trabajo*/
+    margin:0px;
+    padding:0px;
+    border:0px;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* Definimos las animaciones que usaremos en algunos elementos */
+@keyframes aparecer_arriba {
+    0% {
+        transform: translateY(-35px); /* Inicia un poco arriba */
+        opacity: 0.1; /* Transparente */
+    }
+    100% {
+        transform: translateY(0); /* Termina posicionándose en su lugar */
+        opacity: 1; /* Opaco */
+    }
+}
+
+@keyframes aparecer_izquierda {
+    0% {
+        transform: translateX(-20%);
+        opacity: 0.1;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes temblor {
+    0%, 100% { /*Rotación inicial y final nulas*/
+        transform: rotate(0deg); 
+    }
+    25% { /* Efecto tambaleo */
+        transform: rotate(-5deg);
+    }
+    50% {
+        transform: rotate(5deg);
+    }
+    75% {
+        transform: rotate(-5deg);
+    }
+}
+
+@keyframes temblor_lateral {
+    0%, 100% { 
+        transform: translateX(0); 
+    }
+    25% { /* Efecto temblor por traslación*/
+        transform: translateX(-3%);
+    }
+    50% {
+        transform: translateX(3%);
+    }
+    75% {
+        transform: translateX(-3%);
+    }
+}
+
+@keyframes agrandarse {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.1);
+    }
+}
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin-block:1%;
+    background-image: url('images/fondo.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding:0px;
+    background-color: rgba(0, 0, 0, 0.585); /* Fondo negro con 50% de transparencia */
+    background-blend-mode: multiply; /* Con esta propiedad mezclamos el color de fondo sobre la imagen */
+}
+
+
+header {
+    background-color: #f0f0f0f8;
+    width: 100%;
+    margin: 0px;
+}
+
+header div{
+    width: 40%;
+    text-align: center;
+    margin: 0 auto;
+    padding-block: 10px;
+}
+
+header img {
+    width: 60%;
+    height: auto;
+    margin: 0 auto;
+    opacity: 0.1;
+    animation: aparecer_izquierda 2s forwards;
+}
+
+
+
+
+nav {
+    background-color: #e6e6e6f8;
+    width: 100%;
+}
+
+.navegador {
+    display: flex;
+    width: 40%;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.boton_nav {
+    display: block;
+    background-color: #f0f0f0f8;
+    width:18%; /*Mediante este dimensionamiento relativo lograremos una mayor adaptabilidad al reducir el tamaño de la ventana*/
+    height:90px;
+    margin-inline: 0.5%;
+    padding-block: 10px;
+    overflow: hidden; /*Para no tener problemas al redimensionar, impediremos que se muestre completo el contenido de los botones en caso de que no quepa*/
+}
+
+.boton_nav img {
+    display: block;
+    height: 40px;
+    width: auto;
+    margin: 5px auto;
+}
+
+.boton_nav span {
+    text-align: center;
+    height: 20px;
+}
+
+
+/*Justo debajo del menú de navegación, alineamos otro menú con cada elemento de la navegación, para desplegar una selección de opciones
+  añadidas, asociadas a cada elemento. Posicionaremos los elementos de forma equivalente a como lo hicimos en el menú superior, teniendo
+  en cuenta que, como queremos darle posicionamiento absoluto, debemos hacerlo de otra manera.
+  Es importante comentar que la forma más correcta de implementar el menú sería interactuando con la propiedad display, 
+  el problema es que queremos que los elementos queden colocados de la misma manera que en el menú superior y, al "eliminar" alguno
+  de los bloques con display:none; provocaría que los bloques visibles se reposicionaran en lugares indeseados. Es por ello por lo
+  que jugaremos con la propiedad visibility, que nos ofrece un mayor dinamismo.*/
+
+.navegador_oculto {
+    position:absolute; /*Como no queremos que este bloque desplace el resto de elementos hacia abajo, le asignamos este posicionamiento absoluto */
+    display: flex;
+    justify-content: center;
+    left:30%;
+    right:30%;
+    z-index: 1;
+}
+
+.menu_oculto {
+    visibility: hidden; /*Cada menú permanece oculto hasta que se gestione el evento onmouseover del cada respectivo botón del navegador principal*/
+    opacity: 0; /*Completamente transparente inicialmente*/
+    width:18%;
+    margin-inline: 0.5%;
+    border-top: 1px solid black; /*Le damos el borde de arriba que ahora le quitaremos a los botones del menú oculto*/
+    transition: opacity 1s linear; /*Implementamos la transición para cuando cambie su opacidad*/
+}
+
+.boton_oculto {
+    display:block;
+    background-color: none;
+    width: 100%;
+    height: 20px;
+    padding-block: 2px;
+    border-bottom: 1px solid black;
+    background-color: #e6e6e6;
+    font-size: 0.75em;
+    overflow: hidden;
+}
+
+
+
+
+main {
+    width: 80%;
+    background-color: rgba(255, 255, 255, 0.655);
+    margin: 0 auto;
+    padding-block: 2%;
+}
+
+.frames {
+    display: none;
+    width: 90%;
+    border: none;
+}
+
+#inicio { /*Ésta será nuestro bloque de contenido visible inicialmente*/
+    display: initial;
+}
+
+
+
+/*------------------
+  ------Inicio------
+  ------------------*/
+
+.contenedor-principal {
+    display: flex;
+    justify-content:center;
+    flex-wrap: wrap;
+    align-items: center;
+    height: 110vh; /* Ajusta la altura al 110% de la del viewport */
+}
+
+
+.bloque {
+    width: 55%;
+    height: auto;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    opacity: 0.1;
+    animation: aparecer_arriba 2s forwards; /* Aplicamos la animación */
+    cursor: pointer;
+}
+.bloque a {
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+    width: 95%;
+    height: 80%;
+    padding:3%;
+    color: #333;
+    font-size: 1.2em;
+    font-weight: bolder;
+}
+.bloque a img {
+    width:20%;
+    height: auto;
+}
+
+#enlace2 {
+    flex-wrap: wrap;
+}
+
+#e2_img {
+    width:30%;
+    height: auto;
+}
+
+#bloque1 {
+    animation: aparecer_arriba 2s forwards;
+    border: 2px solid #30a2ff;
+}
+
+#bloque2 {
+    animation: aparecer_izquierda 2s forwards;
+    border: 2px solid #ffa930;
+}
+
+#bloque3 {
+    animation: aparecer_izquierda 4s forwards;
+    border: 2px solid #38ed87;
+}
+
+#bloque1:hover, #bloque2:hover, #bloque3:hover {
+    animation: agrandarse 0.5s forwards;
+    opacity: 1;
+}
+
+
+/*------------------
+  -----Pokédex------
+  ------------------*/
+
+.pokemon_pag_pokedex {
+  width: 85%;
+  margin: 0 auto;
+  background: #ffffffc3;
+  padding: 3%;
+  border-radius: 5px;
+  box-shadow: 0 0 10px #0000003f;
+}
+
+#pokedex_img {
+    display:block;
+    width:50%;
+    height: auto;
+    margin:2% auto;
+    padding-inline: 3%;
+    padding-block: 1.5%;
+    background-color: #edededc3;
+    border: 2px solid black;
+    border-radius: 8px;
+    box-shadow: 20px 10px 10px #636363;
+}
+
+.buscador {
+  width:40%;
+  margin: 1% auto;
+  margin-top:10%;
+  margin-bottom: 3%;
+  border: 1px solid rgb(0, 0, 0);
+  padding: 1%;
+  border-radius: 5px;
+  background-color: #e4e4e4;
+}
+
+.pokemon_pag_cartas .buscador {
+    width:55%;
+}
+
+form{
+    display: flex;
+}
+
+#buscador_texto_pokedex, #buscador_texto {
+    width:70%;
+    margin-right: 2%;
+    border: 1px solid black;
+    padding:2%;
+    border-radius: 2px;
+    font-size: 0.9em;
+}
+
+#buscador_submit_pokedex, #buscador_submit {
+    width: 25%;
+    border: 1px solid black;
+    padding:2%;
+    border-radius: 2px;
+    cursor: pointer;
+    background-color: #30a2ff;
+    font-size: 0.9em;
+}
+.pinchable {
+    cursor:pointer;
+}
+
+#buscador_submit_pokedex:hover, #buscador_submit:hover {
+    background-color: #99d1ff;
+}
+
+
+
+.contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0;
+}
+
+.pokemon_caja {
+    width: 150px;
+    margin: 2%;
+    text-align: center;
+    box-shadow: 0 0 10px #ccc;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 1%;
+    opacity: 0.1;
+    animation: aparecer_arriba 1.5s forwards;
+}
+
+/*Este bloque será el que clonemos, por lo que inicialmente será "eliminado"*/
+#id_caja_ {
+    display:none;
+}
+
+.pokemon_caja img {
+    width: 95%;
+    height: auto;
+}
+
+.pokemon_caja img:hover {
+    animation: temblor 0.5s infinite;
+}
+
+.pokemon_caja h2 {
+    font-size: 1.2em;
+    color: #000000;
+}
+.pokemon_caja h3 {
+    font-size: 0.8em;
+    color: #636363;
+}
+
+.pokemon_caja p {
+    font-size: 14px;
+    color: #000000;
+}
+
+
+/*------------------
+  ------Cartas------
+  ------------------*/
+
+.pokemon_pag_cartas {
+    width: 65%;
+    margin: 0 auto;
+    background: white;
+    padding: 5%;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #0000003f;
+}
+
+#pokecartas_img {
+    display:block;
+    width:75%;
+    height: auto;
+    margin:1% auto;
+    border: 2px solid black;
+    border-radius: 8px;
+    box-shadow: 20px 10px 10px #636363;
+}
+
+.pokemon_nav {
+    display:flex;
+    justify-content: space-between;
+}
+.bloque_boton {
+    display: flex;
+    justify-content: center;
+}
+
+.pokemon_nav button {
+    width: 95px;
+    margin-top: 3%;
+    padding: 10% 20%;
+    background: #99d1ff;
+    border-radius: 5px;
+}
+
+.pokemon_nav button:hover {
+    background-color: #30a2ff;
+}
+
+
+.pokemon_carta {
+    margin-top: 5%;
+}
+
+.pokemon_carta h2{
+    text-align: center;
+}
+
+.pokemon_carta img {
+    display: block;
+    width: 45%;
+    margin: 1% auto;
+}
+
+.pokemon_carta img:hover {
+    animation: temblor 0.5s infinite;
+}
+
+.general {
+    display:flex;
+}
+
+.general_info, .general_info2 {
+    background-color: #99d1ff;
+    padding-inline: 1.5%;
+    padding-block: 1.5%;
+    border-radius: 5px;
+    border: 2px solid black;
+    box-shadow: 0 0 5px #00000052;
+    width: 30%;
+}
+
+.general_info:hover, .general_info2:hover {
+    animation: temblor 0.3s forwards;
+}
+
+.general_info img {
+    display: inline;
+    height: 15px;
+    width: auto;
+    margin-inline: 1%;
+}
+
+.general_info2 {
+    background-color: #ffffff;
+    width: 50%;
+    margin: 0 auto;
+}
+
+
+.general_info2 span {
+    font-style: italic;
+}
+
+.general_tipos{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.general_tipos span {
+    display: block;
+    padding: 1.5%;
+    margin: 2%;
+    border:1px solid black;
+    background-color: rgb(215, 215, 215);
+    color:#ffffff;
+    border-radius: 5px;
+}
+
+#tipo1 {
+    background-color: #7AC74C;
+}
+
+#tipo2 {
+    background-color: #A33EA1;
+}
+
+.barra_stat {
+    height: 15px;
+    margin: 5px 0;
+    border: black solid 1px;
+}
+
+#stat1 {
+    background: #4ded78;
+}
+#stat2 {
+    background: #ff4747;
+}
+#stat3 {
+    background: #99d1ff;
+}
+#stat4 {
+    background: #ff4794;
+}
+#stat5 {
+    background: #bb99ff;
+}
+#stat6 {
+    background: #faff6c;
+}
+
+.stats, .evoluciones {
+    padding: 2%;
+    margin-block: 5%;
+    border:2px solid #000000;
+    box-shadow: 0 0 5px #00000052;
+    border-radius: 5px;
+    background-color: #e4e4e4;
+    font-size: 0.8em;
+}
+
+.stats{
+    overflow-x: hidden; /*Algunos Pokémon tienen más del 100% en alguna stat*/
+}
+
+.stats:hover {
+    animation: temblor_lateral 0.5s forwards;
+}
+
+.evoluciones {
+    display:flex;
+    justify-content: center;
+    background-image: url('images/fondo.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.808);
+    background-blend-mode: lighten;
+}
+
+h4 {
+    text-align: center;
+    margin-top: 7%;
+}
+
+#evolucion1, #evolucion2, #evolucion3 {
+    width: 22%;
+    height: auto;
+    margin-inline: 1%;
+}
+
+#evolucion1:hover, #evolucion2:hover, #evolucion3:hover {
+    animation: temblor 0.5s infinite;
+}
+
+#flecha1, #flecha2 {
+    width: 15%;
+    height: auto;
+}
+
+/*Utilizaremos esta mediaQuery para el correcto comportamiento de algunos elementos en pantallas más pequeñas
+/*Realizamos algunos ajustes para el formulario y los títulos dispongan del espacio suficiente*/
+@media (max-width: 600px) {
+    .buscador {
+        width:95%;
+    }
+    .pokemon_pag_cartas .buscador {
+        width:98%;
+    }
+    form {
+        flex-direction: column; /* Cambiamos la dirección del flex a vertical */
+    }
+    #buscador_texto, #buscador_texto_pokedex, #buscador_submit, #buscador_submit_pokedex {
+        width: auto;
+        margin-right: 0;
+        margin-block:1%;
+    }
+    #pokedex_img {
+        width: 85%;
+    }
+    #pokecartas_img {
+        width: 100%;
+        margin: 8% auto;
+    }
+    .contenedor-principal {
+        height: 85vh;
+    }
+}
+
+
+/*------------------
+  -----Enlaces------
+  ------------------*/
+
+.cont_links {
+    display: flex;
+    flex-direction: column;
+    height: 60vh;
+    margin-top: 2.5%;
+    justify-content: center;
+    align-items: center;
+}
+
+.linkE {
+    width: 85%;
+    flex: 1; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4; 
+    border: 1px solid #d0d0d0;
+    color:black;
+    font-size: 24px;
+    border-top-right-radius: 5px;
+}
+
+.linkE:hover {
+    animation: agrandarse 1s forwards;
+}
+
+.cont_imagen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+}
+
+.cont_imagen img {
+    max-height: 100%;
+    max-width: 100%;
+}

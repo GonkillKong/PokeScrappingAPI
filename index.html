@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokeScrapping API</title>
+    <link rel="icon" type="image/x-icon" href="images/pikachu.png">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <header>
+        <div>
+            <h2>PokeScrapping API</h2>
+            <a href="https://pokeapi.co/" title="Haz clic para dirigirte a la API usada como fuente de datos de la página"><img src="images/pokemon_logo.png" alt="Logo oficial de Pokémon"/></a>
+        </div>
+    </header>
+
+    <nav>
+        <div class="navegador">
+            <button id="boton_inicio" class="boton_nav" title="Haz clic para ir a la página de inicio">
+                <img src="images/pikachu.png" alt="Pikachu" />
+                <span>Inicio</span>
+            </button>
+            <button id="boton_pokedex" class="boton_nav" title="Haz clic para ver todos los Pokémon. Puedes seleccionar el tipo de Pokémon">
+                <img src="images/pokeball.png" alt="Pokeball" />
+                <span>Pokédex</span>
+            </button>
+            <button id="boton_cartas" class="boton_nav" title="Haz clic para ver la información de cada Pokémon">
+                <img src="images/metapod.png" alt="Metapod" />
+                <span>PokeCartas</span>
+            </button>
+            <button id="boton_enlaces" class="boton_nav" title="Haz clic para ver todos los enlaces de interés">
+                <img src="images/enlaces.png" alt="Salpicadura de Magikarp" />
+                <span>Enlaces</span>
+            </button>
+        </div>
+    </nav>
+
+
+    <div class="navegador_oculto">
+        <div class="menu_oculto"> <!--Este elemento no tiene asociado ningún menú de selección, pero debe ocupar el espacio-->
+        </div>
+        <div id="tipos_ocultos" class="menu_oculto"> <!--Aquí tenía un menú pero lo quité, aparecerá mencionado en otro sitio, pero ya no existe-->
+        </div>
+        <div class="menu_oculto">
+        </div>
+        <div id="enlace_ocultos" class="menu_oculto">
+            <button id="boton_enlaces1" class="boton_oculto enlace" title="Primer enlace">Pokemongohub</button>
+            <button id="boton_enlaces2" class="boton_oculto enlace" title="Segundo enlace">Smogon</button>
+            <button id="boton_enlaces3" class="boton_oculto enlace" title="Tercer enlace">Serebii</button>
+        </div>
+    </div>
+
+
+
+    <main>
+        <div id="inicio" class="frames">
+            <div class="contenedor-principal">
+                <div class="bloque" id="bloque1">
+                    <a id="enlace1">
+                        <span>HAZTE CON TODOS!</span>
+                        <img src="images/pkdx.jpg" alt="Entrenador Pokémon" Title="Haz clic para ir a la Pokédex!">
+                    </a>
+                </div>
+                <div class="bloque" id="bloque2">
+                    <a id="enlace2">
+                        <span>Consulta las PokeCartas!</span>
+                        <img id="e2_img" src="images/poks.jpg" alt="Carta Pokémon" Title="Haz clic para ver las PokeCartas!">
+
+                    </a>
+                </div>
+                <div class="bloque" id="bloque3">
+                    <a id="enlace3">
+                        <img src="images/ditto.png" alt="Ditto" Title="Haz clic para ver las PokeCartas!">
+                        <span>Enlaces</span>
+                        <img src="images/gengar.png" alt="Gengar" Title="Haz clic para ver las PokeCartas!">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="pokedex" class="frames">
+            <div class="pokemon_pag_pokedex">
+                <img id="pokedex_img" src="images/pokedex.png" alt="Título Pokédex" />
+                <fieldset class="buscador">
+                    <form action="javascript:void(0);">
+                        <input id="buscador_texto_pokedex" type="text" placeholder="Nombre o Número de Pokémon" title="Puedes filtrar los resultados por ID o nombre" required="true">
+                        <input id="buscador_submit_pokedex" type="submit" value="Buscar" title="Haz clic para buscar tus Pokémon">
+                    </form>
+                </fieldset>
+                <div class="contenedor">
+                    <div id="id_caja_" class="pokemon_caja">
+                        <img id="img_caja_" class="pinchable" />
+                        <h2><span id="n_caja_"></span></h2>
+                        <h3>N.º <span id="idPok_caja_"></span></h3>
+                        <div class="general_tipos">
+                            <span id="tipo1_" class="span_tipo_caja"></span>
+                            <span id="tipo2_" class="span_tipo_caja"></span>
+                            <span id="tipo3_" class="span_tipo_caja"></span>
+                            <span id="tipo4_" class="span_tipo_caja"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="cartas" class="frames">
+            <div class="pokemon_pag_cartas">
+                <img id="pokecartas_img" src="images/pokecartas.png" alt="Título PokeCartas" />
+                <hr>
+                <fieldset class="buscador">
+                    <form action="javascript:void(0);"> <!--Nos aseguramos de que el formulario no realice ninguna acción cuando se envíe, ya que tenemos gestionado el evento onclick del botón en js-->
+                        <input id="buscador_texto" type="text" placeholder="Nombre o Número de Pokémon" title="Indica el nombre exacto o número de Pokémon a buscar entre los 151 que existen" required="true">
+                        <input id="buscador_submit" type="submit" value="Buscar" title="Busca un Pokémon para ver su carta">
+                    </form>
+                </fieldset>
+                <div class="pokemon_nav">
+                    <div class="bloque_boton">
+                        <button id="boton_anterior_pokemon" onclick="anteriorPokemon()">Anterior</button>
+                    </div>
+                    <div class="bloque_boton">
+                        <button id="boton_siguiente_pokemon" onclick="siguientePokemon()">Siguiente</button>
+                    </div>
+                </div>
+                <div class="pokemon_carta">
+                    <h2><span id="n_carta"></span> N.º <span id="id_carta"></span></h2>
+                    <img id="img_carta" />
+                    <div class="general">
+                        <div class="general_info">
+                            <p><b>Altura: </b><span id="h_carta"></span>m</p><br />
+                            <p><b>Peso: </b><span id="p_carta"></span>Kg</p><br />
+                            <p><b>Sexo: </b><img id="sF_carta" src="images/femenino.png" alt="Sexo femenino" valign="middle"/> <img id="sM_carta" src="images/masculino.png" alt="Sexo masculino" valign="middle"></p>
+                        </div>
+                        <div class="general_info2">
+                            <p><b>Habilidades: </b><br />
+                                &ensp;<span id="a1_carta"></span><br />
+                                &ensp;<span id="a2_carta"></span><br />
+                                &ensp;<span id="a3_carta"></span><br />
+                            </p>
+                            <div class="general_tipos">
+                                <span id="tipo1" class="span_tipo"></span>
+                                <span id="tipo2" class="span_tipo"></span>
+                                <span id="tipo3" class="span_tipo"></span>
+                                <span id="tipo4" class="span_tipo"></span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+        
+                    <h4>COMBATE</h4>
+                    <div class="stats">
+                        <div id="hp" class="stat">
+                            <label>Vida</label>
+                            <div id="stat1" class="barra_stat"></div>
+                        </div>
+                        <div id="attack" class="stat">
+                            <label>Ataque</label>
+                            <div id="stat2" class="barra_stat"></div>
+                        </div>
+                        <div id="defense" class="stat">
+                            <label>Defensa</label>
+                            <div id="stat3" class="barra_stat"></div>
+                        </div>
+                        <div id="special_attack" class="stat">
+                            <label>Ataque Especial</label>
+                            <div id="stat4" class="barra_stat"></div>
+                        </div>
+                        <div id="special_defense" class="stat">
+                            <label>Defensa Especial</label>
+                            <div id="stat5" class="barra_stat"></div>
+                        </div>
+                        <div id="speed" class="stat">
+                            <label>Velocidad</label>
+                            <div id="stat6" class="barra_stat"></div>
+                        </div>    
+                    </div>
+        
+                    <h4>EVOLUCIONES</h4>
+                    <div class="evoluciones">
+                        <img id="evolucion1" class="pinchable" />
+        
+                        <img id="flecha1" src="images/flecha.png" alt="Flecha 1" />
+        
+                        <img id="evolucion2" class="pinchable" />
+        
+                        <img id="flecha2" src="images/flecha.png" alt="Flecha 2" />
+        
+                        <img id="evolucion3" class="pinchable" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="enlaces" class="frames">
+            <div class="cont_imagen">
+                <img src="images/pokemons.jpeg" alt="Todos los pokemons">
+            </div>
+            <div class="cont_links">
+                <a href="https://pokemongohub.net/" class="linkE">Pokemongohub.net</a>
+                <a href="https://www.smogon.com/" class="linkE">Smogon.com</a>
+                <a href="https://www.serebii.net/" class="linkE">Serebii.net</a>
+            </div>
+        </div>
+
+
+
+
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
