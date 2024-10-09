@@ -293,7 +293,7 @@ function setCartaById (id){ //Consideramos inicialmente el rango de las acciones
         .then(function(datos) {
             document.getElementById("id_carta").innerText = datos.id; //Comenzamos asignando al texto del elemento, el id asociado al Pokémon buscado
             if (datos.name){ // Comprobamos que el string original no es undefined o null
-                let nombre_pokemon = datos.name.charAt(0).toUpperCase() + datos.name.slice(1); // Cambiamos la primera letra del nombre a mayúscula y esto será lo que imprimamos en el documento
+                let nombre_pokemon = datos.species.name.charAt(0).toUpperCase() + datos.species.name.slice(1); // Cambiamos la primera letra del nombre a mayúscula y esto será lo que imprimamos en el documento
                 document.getElementById("n_carta").innerText = nombre_pokemon;
                 document.getElementById("img_carta").setAttribute("alt", nombre_pokemon);
                 document.getElementById("img_carta").setAttribute("title", nombre_pokemon);
@@ -556,7 +556,7 @@ function obtenerNombreTipo(url, callback){
             console.error("Error al obtener datos:", error);
         }); 
 };
-
+/*
 // Para el arbol evolutivo de cada pokemon, necesitamos implementar una función compleja con múltiples llamadas fetch sucesivas a distintas APIS
 function obtenerArbolEvolucion(idPokemon, callback) {
     // Obtenemos información básica del Pokémon para encontrar el ID de su especie
@@ -608,6 +608,66 @@ function obtenerArbolEvolucion(idPokemon, callback) {
             procesarEvolucion(datosEvolucion.chain);
         })
         .catch(error => console.error("Error al obtener datos de la evolución:", error));
+};*/
+
+// Para el arbol evolutivo de cada pokemon, necesitamos implementar una función compleja con múltiples llamadas fetch sucesivas a distintas APIS
+function obtenerArbolEvolucion(idPokemon, callback) {
+    // Obtenemos información básica del Pokémon para encontrar el ID de su especie
+    fetch("https://pokeapi.co/api/v2/pokemon/" + idPokemon)
+        .then(function(response) {
+            return response.json()
+        })
+        .then(function(datosPokemon) {
+            // Obtenemos información de la especie para acceder a la cadena de evolución
+            return fetch(datosPokemon.species.url);
+        })
+
+        .then(function(response) {
+            return response.json()
+        })
+        .then(function(datosEspecie) {
+            // Obtenemos la cadena de evolución
+            return fetch(datosEspecie.evolution_chain.url);
+        })
+
+        .then(function(response) {
+            return response.json()
+        })
+        .then(function(datosEvolucion) {
+            // Procesamos la cadena de evolución
+            let resultados = [];
+            function procesarEvolucion(nodoEvolucion) {
+                
+                fetch(nodoEvolucion.species.url)
+                    .then(function(response) {
+                        return response.json()
+                    })
+                    .then(function(Especie) {
+                        // Obtenemos información adicional para cada forma (Variante default***)
+                        return fetch(Especie.varieties[0].pokemon.url);
+                    })
+                    .then(function(response) {
+                        return response.json()
+                    })
+                    .then(function(datosForma) {
+                        resultados.push({ // Almacenamos la información del nombre y la imagen del Pokémon perteneciente al árbol
+                            nombre: datosForma.name,
+                            imagen: datosForma.sprites.front_default
+                        });
+
+                        if (nodoEvolucion.evolves_to.length > 0) {
+                            procesarEvolucion(nodoEvolucion.evolves_to[0]); // Hacemos una llamada recursiva para cada forma evolutiva
+                            // Si nodoEvolucion.evolves_to.length > 0, significa que hay más etapas de evolución disponibles. Entonces, la función se vuelve a llamar a sí misma
+                        } else {
+                            // Llamamos al callback con los resultados una vez completado todo el proceso
+                            callback(resultados);
+                        }
+                    });
+            }
+            // Iniciamos el proceso al recibir el nodo raíz de la cadena evolutiva, que representa la primera etapa evolutiva del Pokémon.
+            procesarEvolucion(datosEvolucion.chain);
+        })
+        .catch(error => console.error("Error al obtener datos de la evolución:", error));
 };
 
 
@@ -618,7 +678,6 @@ function obtenerArbolEvolucion(idPokemon, callback) {
 
 /*Tenemos varias opciones para mostrar todos los Pokémon en la Pokédex. Podríamos crear 151 cajas en el html y rellenarlas iterando entre los distintos IDs,
   sin embargo, lo más simple es, sin ninguna duda, crear un bloque y clonarlo las veces que deseemos, aportando una mayor flexibilidad al conjunto*/
-//Esta función será la que se en
 function replicarCaja(idCaja) {
     eliminarClones(); //Primero eliminamos los clones que hayamos creado ya. Así podremos gestionar con facilidad el dinamismo
     const contenedor = document.querySelector(".contenedor"); // Seleccionamos el contenedor dentro del cuál replicaremos el bloque div

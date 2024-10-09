@@ -453,8 +453,8 @@ form{
 
 .pokemon_carta img {
     display: block;
-    width: 45%;
-    margin: 1% auto;
+    width: 30%;
+    margin: 5% auto;
 }
 
 .pokemon_carta img:hover {
@@ -469,6 +469,7 @@ form{
     background-color: #99d1ff;
     padding-inline: 1.5%;
     padding-block: 1.5%;
+    margin: 0 2%;
     border-radius: 5px;
     border: 2px solid black;
     box-shadow: 0 0 5px #00000052;
@@ -476,7 +477,7 @@ form{
 }
 
 .general_info:hover, .general_info2:hover {
-    animation: temblor 0.3s forwards;
+    animation: temblor 0.5s forwards;
 }
 
 .general_info img {
@@ -488,8 +489,7 @@ form{
 
 .general_info2 {
     background-color: #ffffff;
-    width: 50%;
-    margin: 0 auto;
+    width: 58%;
 }
 
 
