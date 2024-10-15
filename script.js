@@ -726,7 +726,7 @@ function setColorTiposPokedex(){
 function setPokedex(){
     //Iteramos en un for que recorre todos los Pokémon para añadirlos a su correspondiente caja, dependiente del índice de Pokémon y la caja que le corresponda
     for(var pok=1;pok<=151;pok++){
-        (function(idCaja) { // Usamos una función inmediatamente invocada para para asegurarnos de que el valor de i (en este caso pok) es capturado correctamente en cada iteración del bucle
+        (function(idCaja) { // Usamos una función inmediatamente invocada para asegurarnos de que el valor de i (en este caso pok) es capturado correctamente en cada iteración del bucle
         fetch("https://pokeapi.co/api/v2/pokemon/" + idCaja)
             .then(function(response) {
                 return response.json();
